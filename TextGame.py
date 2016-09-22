@@ -1,44 +1,78 @@
 #Into to programing
 #Author: Daniel Gisolfi
-#Date: 9/13/16
-#CMPT-Version0.1
+#Date: 9/22/16
+#TextGame.py
 
-def main():
-#Start Game
-    title = "The Abandoned Lab:"
-    backstory =  "You have arrived at a large metal door leading to an abandoned computer labratory, explore inside to discover new technology"
+def game():
+    #Start Game
+    ##Game Settings
+    title = "The Abandoned Lab:" 
+    playername = ''
+    backstory =  ("You have arrived at a large metal door leading to an abandoned" 
+                  " Computer labratory, explore inside to discover new technology")
+    score = int(0)
+    ##Game Locations   
+    
     labentrance = "You are at the Lab entrance"
     computerlab = "You are in the Computer Lab"
     datacenter =  "You are in the Data Center"
     servicedesk =  "You are at the Service Desk"
-    score = int(0)
+
+    ###Locations Visited
+    labentranceVisited = True
+    computerlabVisted = False
+    datacenterVisted = False
+    servicedeskVisted = False
+    
+    #Game Start
     playerlocation = labentrance
+    
     print(title)
     print(backstory)
     print(playerlocation)
     input("Press Enter to continue")
 
-#Game
-    x = int(0)
-    while x < 3:
-        if x == 0:
-            playerlocation = computerlab
-        elif x == 1:
-            playerlocation = servicedesk
-        elif x == 2:
-            playerlocation = datacenter
-            
-        score = score + 5
-        print(playerlocation,"Your score is",score)
-        input("Press Enter to continue")
-        x = x + 1
+    #Game loop
+    while True:
+        userinput = input("Which direction would you like to go?: ")
+        userinput = userinput.lower()
 
-#End Game
+        if userinput == "north":
+            if playerlocation == labentrance:
+                playerlocation = servicedesk
+                servicedeskVisted = True
+
+            elif playerlocation == servicedesk:
+                print("there is a wall there")
+
+            elif playerlocation == computerlab:
+                playerlocation = datacenter
+                datacenterVisted = True
+	
+            elif playerlocation == datacenter:
+                print("there is a wall there")
+        elif userinput == "south":
+            
+            if playerlocation == labentrance:
+                print("there is a wall there")
+
+            elif playerlocation == servicedesk:
+                playerlocation = labentrance
+                
+
+            elif playerlocation == computerlab:
+                print("there is a wall there")
+	
+            elif playerlocation == datacenter:
+                playerlocation = computerlab
+                computerlabVisted = True
+
+            print(playerlocation)
+        
     conclusion = "Congradulations, you found the data center and new technology inside"
-    copyright = "Name: Daniel Gisolfi Email: Daniel.Gisolfi1@marist.edu"
+    copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
     print(conclusion)
     print(copyright)
 
-main()
 
-	
+game()
