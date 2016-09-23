@@ -9,10 +9,9 @@ def game():
     title = "The Abandoned Lab:"
     print(title)
     playername = input("Enter the name of your player: ")
-
-    backstory =  playername,(" has arrived at a large metal door\n"
-                             "leading to an abandoned Computer labratory,explore"
-                             "\ninside to discover new technology")
+    backstory = playername + (" has arrived at a large metal door\n"
+                 "leading to an abandoned Computer labratory, explore"
+                 "\ninside to discover new technology")
     score = int(0)
     ##Game Locations   
     
@@ -36,6 +35,7 @@ def game():
     
     print()
     print(backstory)
+    print()
     print(playerlocation)
 
     #Game loop
@@ -46,7 +46,9 @@ def game():
         if userinput == "north":
             if playerlocation == labentrance:
                 playerlocation = servicedesk
-                servicedeskVisted = True
+                if servicedeskVisted == False:
+                    score = score + 5
+                    servicedeskVisted = True
 
             elif playerlocation == servicedesk:
                 print("there is a wall there")
@@ -56,7 +58,9 @@ def game():
 
             elif playerlocation == computerlab:
                 playerlocation = datacenter
-                datacenterVisted = True
+                if datacenterVisited == False:
+                    score = score + 5
+                    datacenterVisited = True
 	
             elif playerlocation == datacenter:
                 print("there is a wall there")
@@ -67,6 +71,9 @@ def game():
 
             elif playerlocation == servicedesk:
                 playerlocation = labentrance
+                if labentranceVisited == False:
+                    score = score + 5
+                    labentranceVisited = True
 
             elif playerlocation == powercenter:
                 print("there is a wall there")
@@ -76,7 +83,9 @@ def game():
 	
             elif playerlocation == datacenter:
                 playerlocation = computerlab
-                
+                if computerlabVisted == False:
+                    score = score + 5
+                    computerlabVisted = True
 
         elif userinput == "east":
 
@@ -85,11 +94,15 @@ def game():
                 
             elif playerlocation == servicedesk:
                 playerlocation = computerlab
-                computerlabVisted = True
+                if computerlabVisted == False:
+                    score = score + 5
+                    computerlabVisted = True
 
             elif playerlocation == powercenter:
                 playerlocation = servicedesk
-                servicedeskVisted = True
+                if servicedeskVisted == False:
+                    score = score + 5
+                    servicedeskVisted = True
 
             elif playerlocation == computerlab:
                 print("there is a wall there")
@@ -104,7 +117,9 @@ def game():
                 
             elif playerlocation == servicedesk:
                 playerlocation = powercenter
-                powercenterVisited = True
+                if powercenterVisited == False:
+                    score = score + 5
+                    powercenterVisited = True
 
             elif playerlocation == powercenter:
                 print("there is a wall there")
@@ -126,9 +141,13 @@ def game():
         
         elif userinput == "quit":
             break
-       
-        print(playerlocation)           
 
+            
+        print()
+        print(playerlocation)
+        print("score = ",score)
+        
+    #End Game
     conclusion = "Congratulations, you found the data center and new technology inside"
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
     print(conclusion)
