@@ -149,7 +149,7 @@ def game():
         print("score = ",score)
         
     #End Game
-    conclusion = "Congratulations, you found the data center and new technology inside"
+    conclusion = "Congratulations " + playername + ", you found the data center and new technology inside"
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
     print()
     print(conclusion)
