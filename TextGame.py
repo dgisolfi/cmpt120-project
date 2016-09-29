@@ -58,10 +58,10 @@ def game():
 
             elif playerlocation == computerlab:
                 playerlocation = datacenter
-                if datacenterVisited == False:
+                if datacenterVisted == False:
                     score = score + 5
-                    datacenterVisited = True
-	
+                    datacenterVisted = True
+                break
             elif playerlocation == datacenter:
                 print("there is a wall there")
         elif userinput == "south":
@@ -141,7 +141,8 @@ def game():
         
         elif userinput == "quit":
             break
-
+        else:
+            print("that is not a valid command")
             
         print()
         print(playerlocation)
@@ -150,6 +151,7 @@ def game():
     #End Game
     conclusion = "Congratulations, you found the data center and new technology inside"
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
+    print()
     print(conclusion)
     print(copyright)
 
