@@ -4,6 +4,23 @@
 #TextGame.py
 #Version 0.3
 
+'''Map
+                                    Testing Room
+                                        |
+                                        |
+                                    Datacenter
+                    Storage Room        |
+                         |              |
+                         |              |
+     Powercenter-----Servicedesk----Computer lab
+                         |   
+                         |
+                         |
+                    Lab Entrance
+
+'''
+    
+
 def game():
     #Start Game
     
@@ -35,236 +52,48 @@ def game():
         +" seemed science fiction, including a small mech suit which you can use to get back to civilization.")
         ] 
 
+    visited = [True,False,False,False,False,False,False]
 
     def playercustom():
-        global playername, score
+        global playername
         playername = input("Enter the name of your player: ")
-        score = int(0)
     playercustom()
+    
     def titleScreen():
         title = "The Abandoned Lab:"
         print(title)
     titleScreen()
+    
     def gameintro(): 
-        global playerlocation 
+        global currLoc, score
         backstory = playername + (", you are lost in the woods and searching for any relief from civilization"
                             +" you come across what used to be a scientific laboratory researching new technologies"
                             +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving" 
                             +" nature…New technology!!! Explore inside to find some. \n")
-        playerlocation = allLoc[0]
-        print()
-        print(backstory)
-        print()
-        print(playerlocation)
-    gameintro()
-    
-    
-
-    
-    
-
-    
-
-    ####Locations Visited
-
-    locVisit = []
-
-    '''Map
-                                        Testing Room
-                                            |
-                                            |
-                                        Datacenter
-                        Storage Room        |
-                             |              |
-                             |              |
-         Powercenter-----Servicedesk----Computer lab
-                             |   
-                             |
-                             |
-                        Lab Entrance
-
-    '''
-    
-
-    #Game loop
-
-  
-    def cmd():
-        while True:
-            cmd = input("Which direction would you like to go?: \n")
-            cmd = userinput.lower()
-
-            if userinput == "north":
-                if playerlocation == labentrance:
-                    playerlocation = servicedesk
-                    if servicedeskVisted == False:
-                        score = score + 5
-                        servicedeskVisted = True
-
-                elif playerlocation == servicedesk:
-                    print("there is a wall there")
-
-                elif playerlocation == powercenter:
-                    print("there is a wall there")
-
-                elif playerlocation == computerlab:
-                    playerlocation = datacenter
-                    if datacenterVisted == False:
-                        score = score + 5
-                        datacenterVisted = True
-                    break
-                elif playerlocation == datacenter:
-                    print("there is a wall there")
-            
-            elif userinput == "south":
-                
-                if playerlocation == labentrance:
-                    print("there is a wall there")
-
-                elif playerlocation == servicedesk:
-                    playerlocation = labentrance
-                    if labentranceVisited == False:
-                        score = score + 5
-                        labentranceVisited = True
-
-                elif playerlocation == powercenter:
-                    print("there is a wall there")
-                    
-                elif playerlocation == computerlab:
-                    print("there is a wall there")
-    	
-                elif playerlocation == datacenter:
-                    playerlocation = computerlab
-                    if computerlabVisted == False:
-                        score = score + 5
-                        computerlabVisted = True
-
-            elif userinput == "east":
-
-                if playerlocation == labentrance:
-                    print("there is a wall there")
-                    
-                elif playerlocation == servicedesk:
-                    playerlocation = computerlab
-                    if computerlabVisted == False:
-                        score = score + 5
-                        computerlabVisted = True
-
-                elif playerlocation == powercenter:
-                    playerlocation = servicedesk
-                    if servicedeskVisted == False:
-                        score = score + 5
-                        servicedeskVisted = True
-
-                elif playerlocation == computerlab:
-                    print("there is a wall there")
-                
-                elif playerlocation == datacenter:
-                    print("there is a wall there")
-                    
-            elif userinput == "west":
-
-                if playerlocation == labentrance:
-                    print("there is a wall there")
-                    
-                elif playerlocation == servicedesk:
-                    playerlocation = powercenter
-                    if powercenterVisited == False:
-                        score = score + 5
-                        powercenterVisited = True
-
-                elif playerlocation == powercenter:
-                    print("there is a wall there")
-                    
-                elif playerlocation == computerlab:
-                    print("there is a wall there")
-                
-                elif playerlocation == datacenter:
-                    print("there is a wall there")
-
-            elif userinput == "help":
-                print("This is a list of vaid commands:"
-                      "\nnorth"
-                      "\nsouth"
-                      "\neast"
-                      "\nwest"
-                      "\nhelp"
-                      "\nquit\n")
-            
-            elif userinput == "quit":
-                break
-            else:
-                print("that is not a valid command")
-                
-            print()
-            print(playerlocation)
-            print("score = ",score)
-    cmd()
+        currLoc = allLoc[0]
+        score = int(0)
         
-    #End Game
-    def ending():
-        conclusion = "Congratulations " + playername + ", you found the data center and new technology inside"
-        copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
-        print()
-        print(conclusion)
-        print(copyright)
-    ending()
-
-game()
-
-
-
-
-
-
-
-
-# def main():
-#   x = 0
-#   addToX()
-#   print(x)
-
-# def addToX():
-#   x = x+10
-
-# main()
-def game():
-    #Start Game
-    
-    ##Game Locations 
-    allLoc = ["labentrance","servicedesk", "powercenter","Storage room", "computerlab", "datacenter","Testing Room"] 
-    
-    visited = []
-    def playercustom():
-        global playername, score
-        playername = input("Enter the name of your player: ")
-        score = int(0)
-    playercustom()
-    def titleScreen():
-        title = "The Abandoned Lab:"
-        print(title)
-    titleScreen()
-    def gameintro(): 
-        global playerlocation 
-        backstory = playername + (", you are lost in the woods and searching for any relief from civilization"
-                            +" you come across what used to be a scientific laboratory researching new technologies"
-                            +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving" 
-                            +" nature…New technology!!! Explore inside to find some. \n")
-        playerlocation = allLoc[0]
         print()
         print(backstory)
         print()
-        print(playerlocation)
+        print(currLoc)
     gameintro()
 
     def move(dest):
-            global score, visited, currLoc
-            currLoc = dest
-            if not visited[dest]:
-                visited[dest] = true
-                score += 5
+        currLoc = dest
+        if visited[dest] == False:
+            score += 5
+            print("false")
+            visited[dest] = True
+        updateGame()
 
+    def updateGame():
+        print()
+        print(currLoc)
+        print("score = ",score)
+    
 
+    #Game loop
     def userinput():
         while True:
             cmd = input("Which direction would you like to go?: \n")
@@ -274,14 +103,14 @@ def game():
             
 
             if cmd == "north":
-                if currLoc == 0:
+                if currLoc == allLoc[0]:
                     move(1)
-                elif currLoc == 1:
-                    move(3)
-                elif currLoc == 4:
-                    move(5)
-                elif currLoc == 5:
-                    move(6)
+                # elif currLoc == allLoc[1]:
+                #     move(3)
+                # elif currLoc == 4:
+                #     move(5)
+                # elif currLoc == 5:
+                #     move(6)
                 else:
                     print(destError)
 
@@ -314,7 +143,8 @@ def game():
                     print(destError)
 
             elif cmd == "help":
-                print()
+                cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
+                print(cmdList)
             
             elif cmd == "quit":
                 break
@@ -324,8 +154,22 @@ def game():
 
             elif cmd == "map":
                 print()             
-
-
     userinput()
+
+    #End Game
+    def ending():
+        conclusion = "Congratulations " + playername + ", you found the data center and new technology inside"
+        copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
+        print()
+        print(conclusion)
+        print(copyright)
+    ending()
+
 game()
+
+
+
+
+
+
 
