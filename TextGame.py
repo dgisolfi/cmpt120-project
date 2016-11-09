@@ -1,8 +1,8 @@
 #Into to programing
 #Author: Daniel Gisolfi
-#Date: 9/22/16
+#Date: 11/4/16
 #TextGame.py
-#Version 0.3
+#Version 0.7
 
 def game():
     
@@ -30,8 +30,24 @@ def game():
     ("Large mainframes hold mass amounts of data collected by the lab while it was operational,"
     +" including all reports of experiments and tests"),
     #Testing Room
-    ("In this room lies the finished technologies of the lab that where left, you see dozons of itmes that untill now only"
+    ("In this room lies the finished technologies of the lab that were left, you see dozons of itmes that untill now only"
     +" seemed science fiction, including a small mech suit which you can use to get back to civilization.")]
+
+    #Game Matrix
+
+    gameMatrix =[[1,-1,-1,3],
+    [4,0,5,2],
+    [-1,3,1,-1],
+    [2,-1,0,-1],
+    [-1,1,6,-1],
+    [6,-1,-1,1],
+    [7,5,-1,4],
+    [-1,6,-1,-1]]
+
+
+    #item list
+
+    item = ["nothing","nothing","map","fashlight","nothing","nothing","keycard","nothing"]
                         
     #Start Game
     def playercustom():
@@ -66,8 +82,24 @@ def game():
         currLoc = dest
         if visited[dest] == False:
             score += 5
+            moveCount += 1
             visited[dest] = True
+        if moveCount => 15:
+            break
         updateGame()
+
+    def take():
+        global inventory
+        inventory = []
+        inventory.append.item[currLoc]
+
+
+    def examine():
+        if currLoc == item[currLoc]: #checks if the current location matches any locations in the items list
+            print("There is a", item[currLoc], "in the area" )#reveal
+        else:
+            print("there is no item in this area")#let the player know there is not a item in this area
+
 
     def updateGame():
         print()
@@ -137,18 +169,18 @@ def game():
 
             elif cmd == "map":
                 print('''Map
-                                    Testing Room(6)
+                                    Testing Room(7)
                                         |
                                         |
-                                    Datacenter(5)
-                    Storage Room(3)     |
+                Storage Room(4)-----Datacenter(6)
                          |              |
                          |              |
-Powercenter(2)-----Servicedesk(1)----Computer lab(4)
-                         |   
-                         |
-                         |
-                    Lab Entrance(0)
+                         |              |
+Powercenter(2)-----Servicedesk(1)---Computer lab(5)
+      |                  |   
+      |                  |
+      |                  |
+Side Entrance(3)---Lab Entrance(0)
 
 ''')             
 #End Game
@@ -161,3 +193,18 @@ Powercenter(2)-----Servicedesk(1)----Computer lab(4)
         print(copyright)
     userinput()
 game()
+
+nowhere = -1 
+lab = 1
+
+
+
+paths = [matrix]
+
+directions = ["north","south","east","west"]
+
+def getDestination(startloc,direct):
+    dest = paths[startloc][direct]
+    if dest == nowwhwere:
+            print("you cannot go " + direct + " from " + locationNames[startloc] + ".")
+        return dest
