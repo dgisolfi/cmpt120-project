@@ -48,6 +48,7 @@ gameMatrix =[[1,-1,-1,3],
 #item list
 
 itemList = ["nothing","nothing","map","fashlight","nothing","nothing","keycard","nothing"]
+inventory = []
 
 #Direction list
 
@@ -82,7 +83,7 @@ def gameintro():
                         +" nature…New technology!!! Explore inside to find some. \n")
     currLoc = 0
     score = int(0)
-    moveCount = int(0)
+    moveCount = int(14)
     print()
     print(backstory)
     print()
@@ -98,31 +99,31 @@ def move(dest):
         score += 5
         moveCount += 1
         visited[dest] = True
-    #if moveCount >= 15:
+    if moveCount >= 15:
+        ending()
+    if currLoc == 7:
+        ending()
     updateGame()
 
 def getDestination(startloc,direct):
     dest = gameMatrix[currLoc][direct]
     print(dest)
     if dest == nowhere:
-            print("you cannot go " + direct + " from " + locationNames[startloc] + ".")
+            print("you cannot go",cmd,"from",locationNames[startloc],".")
             dest = startloc
             return dest
     move(dest)
 
 def take():
-    global inventory
-    inventory = []
-    inventory.append.itemList[currLoc]
+    inventory.append(itemList[currLoc])
+    print("you now have a", itemList[currLoc])
     itemList[currLoc] = "nothing"
 
 
 def examine():
-    if currLoc == itemList[currLoc]: #checks if the current location matches any locations in the items list
-        return True
+    if itemList[currLoc] != "nothing": #checks if the current location matches any locations in the items list
         print("There is a", itemList[currLoc], "in the area" )#reveal
     else:
-        return False
         print("there is no item in this area")#let the player know there is not a item in this area
 
 
@@ -131,42 +132,48 @@ def updateGame():
     print("You are at the",allLoc[currLoc])
     print("score = ",score)
     print()
-    print('you have' + +"moves left")
+    print('you have', 15- moveCount, "moves left")
     print(locDetails[currLoc])
     print()
     
     
 def userinput():
     while True:
-        cmd = input("Which direction would you like to go?: \n")
+        global cmd
+        cmd = input("what would you like to do?: \n")
         cmd = cmd.lower()
-        destError = "You cannot go that way"
 
         if cmd == "north":
             direct = 0
         elif cmd == "south":
-            direct = 0
+            direct = 1
         elif cmd == "east":
-            direct = 0
+            direct = 2
         elif cmd == "west":
-            direct = 0 
-        getDestination(currLoc,direct)
+            direct = 3  
+
         elif cmd == "examine":
+            print("dude it worked")
             examine()
+            continue
         elif cmd == "take":
             take()
+            continue
         elif cmd == "help":
             cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
             print(cmdList)
+            continue
         
         elif cmd == "quit":
             break
         
         elif cmd == "points":
-            print(score) 
+            print(score)
+            continue 
 
         elif cmd == "map":
-            print('''Map
+            if "map" in inventory:
+                print('''Map
                                 Testing Room(7)
                                     |
                                     |
@@ -180,35 +187,35 @@ Powercenter(2)-----Servicedesk(1)---Computer lab(5)
   |                  |
 Side Entrance(3)---Lab Entrance(0)
 
-''')             
+''')
+            else:
+                print("you have not found the map yet")
+            continue
+
+        else:
+            print("that is not a valid command")
+            continue
+        
+        getDestination(currLoc,direct)
 #End Game
 def ending():
-    conclusion = "Congratulations " + playername + ", you found the Testing room and technology inside, to help you get home safe"
+    if moveCount = 15
+        print("you ran out of moves")
+        print()
+        print("Game Over")
+        print()
+    elif currLoc == 7
+        conclusion = "Congratulations " + playername + ", you found the Testing room and technology inside, to help you get home safe"
+        print(conclusion)
+        print() 
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
-    print() 
-    print(conclusion)
-    print() 
     print(copyright)
-
-
-
-
-
 
 def main():
     playercustom()
     titleScreen()
     gameintro()
     userinput()
-
 main()
 
-
-
-
-
-
-
-
-paths = [matrix]
 
