@@ -5,10 +5,10 @@
 #Version 0.9
 
 
-class Player
+class Player:
     
     maxItems = 5
-    #constructor
+
     def __init__(self,name):
         self.name = name    #atrributes of player
         self.location = 0
@@ -16,7 +16,6 @@ class Player
         self.inventory = []
         self.moveCount = 0
 
-    #method - an operation we an preform on a player
     def take(self, item):
         inventory.append(itemList[currLoc])
         print("you now have a", itemList[currLoc])
@@ -37,11 +36,49 @@ class Player
         else:
             print("there is no item in this area")#let the player know there is not a item in this area
 
-class Locale
 
-    def __init__(self)
-        self.locations = []
-        self.
+
+
+class Locale:
+
+    def __init__(self, name, descrip, visited, items):
+        self.name = name    #attributes of locations
+        self.descrip = descrip
+        self.visited = visited
+        self.items = []
+
+locations = [
+    Locale("Lab Entrance","You come to the entrance where a large metal door used to stand protecting the "
+         +"lab and the nerds inside from the wilderness. There is now just a large opening leading into the dark lab. "
+         +"Head inside to further explore the lab",True,""),
+    
+    Locale("Service Desk","Entering the lab there is a service desk waiting dead ahead dimly lit only by the "
+         +"flickering CRT monitors left behind. there seems to be nothing here but unless computers from the 90s and lots "
+         +"of crumpled papers.",False,"Keycard"),
+    
+    Locale("Powercenter","Huge generators fill the room, they are all shutdown as the main power switch is turned off, "
+         +" the backup battery seems to be charged and is the only source of power for the lab currently",False,"Flashlight"),
+    
+    Locale("Side Entrance","off to the side of the Main entrance lies a hidden door that appers to also lead to the lab",False, ""),
+    
+    Locale("Storage Room","Behind the door to the storage room lies shelves upon shelves of prtotypes of jetpacks, "
+         +"flying cars and hoverboards",False, "Map"),
+
+    Locale("Computer Lab","In the computer lab there is little walking space as the room was stuffed to the max with as many cubicles that"
+        +" would fit. There is a lone ceiling fan missing half its blades with plenty of trashed computers, paper and floppy"
+        +" disks scattered across the room.",False, ""),
+
+    Locale("Datacenter","Large mainframes hold mass amounts of data collected by the lab while it was operational,"
+        +" including all reports of experiments and tests",False, ""),
+
+    Locale("Testing Room","In this room lies the finished technologies of the lab that were left, you see dozons of itmes that untill now only"
+        +" seemed science fiction, including a small mech suit which you can use to get back to civilization.",False, "Power shoes"),
+
+    Locale("Network Room","A small compact room filled with ethernet cables connected to various machines.",False, ""),
+
+    Locale("Manufacturing Lab","An old manufacturing room where assembly lines are set up with products in various stages of completion",
+        False, "Battery")
+    ]
 
 
 
@@ -60,7 +97,7 @@ gameMatrix =[
 [7,5,-1,4],
 [-1,6,-1,-1],
 [-1,2,4,-1],
-[-1,4,7 ,-1]]
+[-1,4,7,-1]]
 
 
 #item list
@@ -83,9 +120,8 @@ dataCenter = 6
 testingRoom = 7
                     
 #Start Game
-def playercustom():
-    global playername
-    playername = input("Enter the name of your player: ")
+def playerCustom():
+    Player.name = input("Enter the name of your player: ")
 
 
 def titleScreen():
@@ -95,7 +131,7 @@ def titleScreen():
 
 def gameintro(): 
     global currLoc, score, moveCount
-    backstory = playername + (", you are lost in the woods and searching for any relief from civilization"
+    backstory = Player.name + (", you are lost in the woods and searching for any relief from civilization"
                         +" you come across what used to be a scientific laboratory researching new technologies"
                         +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving" 
                         +" nature…New technology!!! Explore inside to find some. \n")
@@ -105,8 +141,8 @@ def gameintro():
     print()
     print(backstory)
     print()
-    print("You are at the",allLoc[currLoc])
-    print(locDetails[currLoc])
+    #print("You are at the",allLoc[currLoc])
+    #print(locDetails[currLoc])
     print()
 
 
@@ -134,7 +170,7 @@ def getDestination(startloc,direct):
     
 
 def examine():
-    
+    pass
 
 
 def updateGame():
@@ -143,7 +179,7 @@ def updateGame():
     print("score = ",score)
     print()
     print('you have', 15- moveCount, "moves left")
-    print(locDetails[currLoc])
+    #print(locDetails[currLoc])
     print()
     
     
@@ -153,43 +189,43 @@ def  loop():
         cmd = input("what would you like to do?: \n")
         cmd = cmd.lower()
 
-        if cmd == "north":
+        if cmd == "north" or "n":
             direct = 0
-        elif cmd == "south":
+        elif cmd == "south" or "s":
             direct = 1
-        elif cmd == "east":
+        elif cmd == "east" or "e":
             direct = 2
-        elif cmd == "west":
+        elif cmd == "west" or "w":
             direct = 3  
 
-        elif cmd == "examine":
+        elif cmd == "examine" or "x":
             examine()
             continue
 
-        elif cmd == "take":
+        elif cmd == "take" or "t":
             take()
             continue
-        elif cmd == "help":
+        elif cmd == "help" or "h":
             cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
             print(cmdList)
             continue
         
-        elif cmd == "quit":
+        elif cmd == "quit" or "q":
             break
         
-        elif cmd == "points":
+        elif cmd == "points" or "p":
             print(score)
             continue 
 
-        elif cmd == "map":
-            if "map" in inventory:
+        elif cmd == "map" or "m":
+            if "map" in self.inventory:
                 print('''Map
 
 
-            Manufacuring Lab(8) Testing Room(7)
+            Manufacturing Lab(9) Testing Room(7)
                      |              |
                      |              |
-Network Room--Storage Room(4)-----Datacenter(6)
+Network Room(8)--Storage Room(4)--Datacenter(6)
       |              |              |
       |              |              |
       |              |              |
@@ -209,6 +245,13 @@ Side Entrance(3)---Lab Entrance(0)
             continue
         
         getDestination(currLoc,direct)
+
+
+
+
+
+
+
 #End Game
 def ending():
     if moveCount == 15:
@@ -224,10 +267,10 @@ def ending():
     print(copyright)
 
 def main():
-    playercustom()
+    playerCustom()
     titleScreen()
     gameintro()
-    userinput()
+    loop()
 main()
 
 
