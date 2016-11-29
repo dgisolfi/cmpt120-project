@@ -16,6 +16,26 @@ class Player:
         self.inventory = []
         self.moveCount = 0
 
+    def examine(self, item):
+        if locations[Player.location].item != "": #checks if the current location matches any locations in the items list:
+            print("There is a", locations[Player.location].item, "in the area" )#reveal
+        print(Item.locations[Player.location].descrip)
+        else:
+            print("there is no item in this area")#let the player know there is not a item in this area
+
+    def take(self, item):
+        if len(Player.inventory) < Player.maxItems:
+            if item in locations[Player.location].item:
+            Player.inventory.append()
+        else:
+            print("that item is not here")
+        else:
+            ending()
+
+    def drop(self, item):
+        Player.inventory.remove(locations[Player.location].item)
+        locations[Player.location].item = item
+
 
 class Locale:
 
@@ -73,8 +93,6 @@ items = [
 
 
 
-
-
 #Game Matrix
 
 gameMatrix =[
@@ -116,26 +134,11 @@ def titleScreen():
     title = "The Abandoned Lab:"
     print(title)
 
-def examine():
-    if locations[Player.location].item != "": #checks if the current location matches any locations in the items list
-        print("There is a", locations[Player.location].item, "in the area" )#reveal
-    else:
-        print("there is no item in this area")#let the player know there is not a item in this area
-
-def take():
-    if len(Player.inventory) < Player.maxItems:
-        Player.inventory.append()
-    else:
-        ending()
-
-def drop():
-    Player.inventory.remove(locations[Player.location].item)
-
 def gameintro(): 
     backstory = Player.name + (", you are lost in the woods and searching for any relief from civilization"
-                        +" you come across what used to be a scientific laboratory researching new technologies"
-                        +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving" 
-                        +" nature…New technology!!! Explore inside to find some. \n")
+                            +" you come across what used to be a scientific laboratory researching new technologies"
+                            +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving \n"
+                +" Find all items to win")
     Player.location = 0
     Player.score = 0
     Player.moveCount = 0
@@ -155,8 +158,6 @@ def move(dest):
         Player.moveCount += 1
         locations[dest].visited = True
     if Player.moveCount >= 15:
-        ending()
-    if Player.location == 7:
         ending()
     updateGame()
 
@@ -197,12 +198,17 @@ def  loop():
             direct = 3  
 
         elif cmd == "examine":
-            examine()
+        [cmd,item] = examine(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
 
         elif cmd == "take":
-            take()
+            [cmd,item] = take(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
+
+    elif cmd == "drop":
+        [cmd,item] = drop(str,input("Enter the command and what item you would like to affect").split(" "))
+        continue
+
         elif cmd == "help":
             cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
             print(cmdList)
@@ -212,7 +218,7 @@ def  loop():
             break
         
         elif cmd == "points":
-            print(score)
+            print(Player.score)
             continue 
 
         elif cmd == "map":
@@ -246,10 +252,6 @@ Side Entrance(3)---Lab Entrance(0)
 
 
 
-
-
-
-
 #End Game
 def ending():
     if Player.moveCount == 15:
@@ -270,5 +272,3 @@ def main():
     gameintro()
     loop()
 main()
-
-
