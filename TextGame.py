@@ -9,17 +9,18 @@ class Player:
     
     maxItems = 5
 
-    def __init__(self,name):
+    def __init__(self,name,location,score,inventory,moveCount):
         self.name = name    #atrributes of player
         self.location = 0
         self.score = 0
         self.inventory = []
         self.moveCount = 0
 
+
     def take(self, item):
-        inventory.append(itemList[currLoc])
-        print("you now have a", itemList[currLoc])
-        itemList[currLoc] = "nothing"
+        inventory.append(itemList[Player.location])
+        print("you now have a", itemList[Player.location])
+        itemList[Player.location] = "nothing"
 
         if len(self.inventory) < Player.maxItems:
             self.inventory.append(item)
@@ -30,9 +31,9 @@ class Player:
     def drop(self, item):
         pass
 
-    def Examine(self, item):
-        if itemList[currLoc] != "nothing": #checks if the current location matches any locations in the items list
-            print("There is a", itemList[currLoc], "in the area" )#reveal
+    def examine(self, item):
+        if locations[Player.location].item != "": #checks if the current location matches any locations in the items list
+            print("There is a", locations[Player.location].item, "in the area" )#reveal
         else:
             print("there is no item in this area")#let the player know there is not a item in this area
 
@@ -41,11 +42,11 @@ class Player:
 
 class Locale:
 
-    def __init__(self, name, descrip, visited, items):
+    def __init__(self, name, descrip, visited, item):
         self.name = name    #attributes of locations
         self.descrip = descrip
         self.visited = visited
-        self.items = []
+        self.item = item
 
 locations = [
     Locale("Lab Entrance","You come to the entrance where a large metal door used to stand protecting the "
@@ -71,7 +72,7 @@ locations = [
     Locale("Datacenter","Large mainframes hold mass amounts of data collected by the lab while it was operational,"
         +" including all reports of experiments and tests",False, ""),
 
-    Locale("Testing Room","In this room lies the finished technologies of the lab that were left, you see dozons of itmes that untill now only"
+    Locale("Testing Room","In this room lies the finished technologies of the lab that were left, you see dozons of items that untill now only"
         +" seemed science fiction, including a small mech suit which you can use to get back to civilization.",False, "Power shoes"),
 
     Locale("Network Room","A small compact room filled with ethernet cables connected to various machines.",False, ""),
@@ -79,9 +80,6 @@ locations = [
     Locale("Manufacturing Lab","An old manufacturing room where assembly lines are set up with products in various stages of completion",
         False, "Battery")
     ]
-
-
-
 
 
 
@@ -130,40 +128,38 @@ def titleScreen():
 
 
 def gameintro(): 
-    global currLoc, score, moveCount
     backstory = Player.name + (", you are lost in the woods and searching for any relief from civilization"
                         +" you come across what used to be a scientific laboratory researching new technologies"
                         +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving" 
                         +" nature…New technology!!! Explore inside to find some. \n")
-    currLoc = 0
-    score = int(0)
-    moveCount = int(14)
+    Player.location = 0
+    Player.score = 0
+    Player.moveCount = 0
     print()
     print(backstory)
     print()
-    #print("You are at the",allLoc[currLoc])
-    #print(locDetails[currLoc])
+    print("You are at the",locations[Player.location].name)
+    print(locations[Player.location].descrip)
     print()
 
 
 def move(dest):
-    global currLoc, score, moveCount
-    currLoc = dest
-    if visited[dest] == False:
-        score += 5
-        moveCount += 1
-        visited[dest] = True
-    if moveCount >= 15:
+    Player.location = dest
+    if locations[dest].visited == False:
+        Player.score += 5
+        Player.moveCount += 1
+        locations[dest].visited = True
+    if Player.moveCount >= 15:
         ending()
-    if currLoc == 7:
+    if Player.location == 7:
         ending()
     updateGame()
 
 def getDestination(startloc,direct):
-    dest = gameMatrix[currLoc][direct]
+    dest = gameMatrix[Player.location][direct]
     print(dest)
     if dest == nowhere:
-            print("you cannot go",cmd,"from",allLoc[startloc],".")
+            print("you cannot go",cmd,"from",locations[Player.startloc],".")
             dest = startloc
             return dest
     move(dest)
@@ -175,11 +171,12 @@ def examine():
 
 def updateGame():
     print()
-    print("You are at the",allLoc[currLoc])
-    print("score = ",score)
+    print("You are at the",locations[Player.location].name)
+    print("score = ",Player.score)
     print()
-    print('you have', 15- moveCount, "moves left")
-    #print(locDetails[currLoc])
+    print('you have', 15- Player.moveCount, "moves left")
+    if locations[Player.location].visited != True:
+        print(locations[Player.location].descrip)
     print()
     
     
@@ -244,7 +241,7 @@ Side Entrance(3)---Lab Entrance(0)
             print("that is not a valid command")
             continue
         
-        getDestination(currLoc,direct)
+        getDestination(Player.location,direct)
 
 
 
@@ -254,12 +251,12 @@ Side Entrance(3)---Lab Entrance(0)
 
 #End Game
 def ending():
-    if moveCount == 15:
+    if Player.moveCount == 15:
         print("you ran out of moves")
         print()
         print("Game Over")
         print()
-    elif currLoc == 7:
+    elif Player.location == 7:
         conclusion = "Congratulations " + playername + ", you found the Testing room and technology inside, to help you get home safe"
         print(conclusion)
         print() 
