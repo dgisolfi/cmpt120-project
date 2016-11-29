@@ -17,29 +17,6 @@ class Player:
         self.moveCount = 0
 
 
-    def take(self, item):
-        inventory.append(itemList[Player.location])
-        print("you now have a", itemList[Player.location])
-        itemList[Player.location] = "nothing"
-
-        if len(self.inventory) < Player.maxItems:
-            self.inventory.append(item)
-            return True
-        else:
-            return False
-
-    def drop(self, item):
-        pass
-
-    def examine(self, item):
-        if locations[Player.location].item != "": #checks if the current location matches any locations in the items list
-            print("There is a", locations[Player.location].item, "in the area" )#reveal
-        else:
-            print("there is no item in this area")#let the player know there is not a item in this area
-
-
-
-
 class Locale:
 
     def __init__(self, name, descrip, visited, item):
@@ -81,6 +58,21 @@ locations = [
         False, "Battery")
     ]
 
+class Item:
+
+    def __init__(self,name,descrip):
+        self.name = name
+        self.descrip = descrip
+
+items = [
+    Item("map","a pecie of paper that shows were locations of the game are"),
+    Item("keycard","a Id card that grants accss to rooms"),
+    Item("FlashLight","a old fashlight that still needs a battery"),
+    Item("Power shoes","shoes that allow the user to move quicker"),
+    Item("Battery","a battery that still holds a charge and can power a flashlight")]
+
+
+
 
 
 #Game Matrix
@@ -98,10 +90,6 @@ gameMatrix =[
 [-1,4,7,-1]]
 
 
-#item list
-
-itemList = ["nothing","nothing","map","fashlight","nothing","nothing","keycard","nothing"]
-inventory = []
 
 #Direction list
 
@@ -116,6 +104,8 @@ storageRoom = 4
 computerLab = 5
 dataCenter = 6
 testingRoom = 7
+NetworkRoom = 8
+ManufacturingRoom = 9
                     
 #Start Game
 def playerCustom():
@@ -126,6 +116,20 @@ def titleScreen():
     title = "The Abandoned Lab:"
     print(title)
 
+def examine():
+    if locations[Player.location].item != "": #checks if the current location matches any locations in the items list
+        print("There is a", locations[Player.location].item, "in the area" )#reveal
+    else:
+        print("there is no item in this area")#let the player know there is not a item in this area
+
+def take():
+    if len(Player.inventory) < Player.maxItems:
+        Player.inventory.append()
+    else:
+        ending()
+
+def drop():
+    Player.inventory.remove(locations[Player.location].item)
 
 def gameintro(): 
     backstory = Player.name + (", you are lost in the woods and searching for any relief from civilization"
@@ -135,6 +139,7 @@ def gameintro():
     Player.location = 0
     Player.score = 0
     Player.moveCount = 0
+    Player.inventory = ""
     print()
     print(backstory)
     print()
@@ -163,10 +168,6 @@ def getDestination(startloc,direct):
             dest = startloc
             return dest
     move(dest)
-    
-
-def examine():
-    pass
 
 
 def updateGame():
@@ -186,36 +187,36 @@ def  loop():
         cmd = input("what would you like to do?: \n")
         cmd = cmd.lower()
 
-        if cmd == "north" or "n":
+        if cmd == "north":
             direct = 0
-        elif cmd == "south" or "s":
+        elif cmd == "south":
             direct = 1
-        elif cmd == "east" or "e":
+        elif cmd == "east":
             direct = 2
-        elif cmd == "west" or "w":
+        elif cmd == "west":
             direct = 3  
 
-        elif cmd == "examine" or "x":
+        elif cmd == "examine":
             examine()
             continue
 
-        elif cmd == "take" or "t":
+        elif cmd == "take":
             take()
             continue
-        elif cmd == "help" or "h":
+        elif cmd == "help":
             cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
             print(cmdList)
             continue
         
-        elif cmd == "quit" or "q":
+        elif cmd == "quit":
             break
         
-        elif cmd == "points" or "p":
+        elif cmd == "points":
             print(score)
             continue 
 
-        elif cmd == "map" or "m":
-            if "map" in self.inventory:
+        elif cmd == "map":
+            if "map" in Player.inventory:
                 print('''Map
 
 
@@ -256,7 +257,7 @@ def ending():
         print()
         print("Game Over")
         print()
-    elif Player.location == 7:
+    elif Player.inventory == 5:
         conclusion = "Congratulations " + playername + ", you found the Testing room and technology inside, to help you get home safe"
         print(conclusion)
         print() 
