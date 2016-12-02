@@ -5,11 +5,11 @@
 #Version 0.9
 
 
-class Player:
+class player:
     
     maxItems = 5
 
-    def __init__(self,name,location,score,inventory,moveCount):
+    def __init__(self, name):
         self.name = name    #atrributes of player
         self.location = 0
         self.score = 0
@@ -17,24 +17,24 @@ class Player:
         self.moveCount = 0
 
     def examine(self, item):
-        if locations[Player.location].item != "": #checks if the current location matches any locations in the items list:
-            print("There is a", locations[Player.location].item, "in the area" )#reveal
-        print(Item.locations[Player.location].descrip)
+        if locations[player.location].item != "": #checks if the current location matches any locations in the items list:
+            print("There is a", locations[player.location].item, "in the area" )#reveal
+            print(Item.locations[player.location].descrip)
         else:
             print("there is no item in this area")#let the player know there is not a item in this area
 
     def take(self, item):
-        if len(Player.inventory) < Player.maxItems:
-            if item in locations[Player.location].item:
-            Player.inventory.append()
-        else:
-            print("that item is not here")
+        if len(player.inventory) < player.maxItems:
+            if item in locations[player.location].item:
+                player.inventory.append()
+            else:
+                print("that item is not here")
         else:
             ending()
 
     def drop(self, item):
-        Player.inventory.remove(locations[Player.location].item)
-        locations[Player.location].item = item
+        player.inventory.remove(locations[player.location].item)
+        locations[player.location].item = item
 
 
 class Locale:
@@ -42,7 +42,7 @@ class Locale:
     def __init__(self, name, descrip, visited, item):
         self.name = name    #attributes of locations
         self.descrip = descrip
-        self.visited = visited
+        self.visited = False
         self.item = item
 
 locations = [
@@ -124,10 +124,13 @@ dataCenter = 6
 testingRoom = 7
 NetworkRoom = 8
 ManufacturingRoom = 9
-                    
+
+# Give the player a placeholder, get the real name later with playerCustom
+player = player("noname")
+
 #Start Game
 def playerCustom():
-    Player.name = input("Enter the name of your player: ")
+    player.name = input("Enter the name of your player: ")
 
 
 def titleScreen():
@@ -135,37 +138,37 @@ def titleScreen():
     print(title)
 
 def gameintro(): 
-    backstory = Player.name + (", you are lost in the woods and searching for any relief from civilization"
+    backstory = player.name + (", you are lost in the woods and searching for any relief from civilization"
                             +" you come across what used to be a scientific laboratory researching new technologies"
                             +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving \n"
                 +" Find all items to win")
-    Player.location = 0
-    Player.score = 0
-    Player.moveCount = 0
-    Player.inventory = ""
+    player.location = 0
+    player.score = 0
+    player.moveCount = 0
+    player.inventory = ""
     print()
     print(backstory)
     print()
-    print("You are at the",locations[Player.location].name)
-    print(locations[Player.location].descrip)
+    print("You are at the",locations[player.location].name)
+    print(locations[player.location].descrip)
     print()
 
 
 def move(dest):
-    Player.location = dest
+    player.location = dest
     if locations[dest].visited == False:
-        Player.score += 5
-        Player.moveCount += 1
+        player.score += 5
+        player.moveCount += 1
         locations[dest].visited = True
-    if Player.moveCount >= 15:
+    if player.moveCount >= 15:
         ending()
     updateGame()
 
 def getDestination(startloc,direct):
-    dest = gameMatrix[Player.location][direct]
+    dest = gameMatrix[player.location][direct]
     print(dest)
     if dest == nowhere:
-            print("you cannot go",cmd,"from",locations[Player.startloc],".")
+            print("you cannot go",cmd,"from",locations[player.startloc],".")
             dest = startloc
             return dest
     move(dest)
@@ -173,12 +176,12 @@ def getDestination(startloc,direct):
 
 def updateGame():
     print()
-    print("You are at the",locations[Player.location].name)
-    print("score = ",Player.score)
+    print("You are at the",locations[player.location].name)
+    print("score = ",player.score)
     print()
-    print('you have', 15- Player.moveCount, "moves left")
-    if locations[Player.location].visited != True:
-        print(locations[Player.location].descrip)
+    print('you have', 15- player.moveCount, "moves left")
+    if locations[player.location].visited != True:
+        print(locations[player.location].descrip)
     print()
     
     
@@ -198,16 +201,16 @@ def  loop():
             direct = 3  
 
         elif cmd == "examine":
-        [cmd,item] = examine(str,input("Enter the command and what item you would like to affect").split(" "))
+            [cmd,item] = examine(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
 
         elif cmd == "take":
             [cmd,item] = take(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
 
-    elif cmd == "drop":
-        [cmd,item] = drop(str,input("Enter the command and what item you would like to affect").split(" "))
-        continue
+        elif cmd == "drop":
+            [cmd,item] = drop(str,input("Enter the command and what item you would like to affect").split(" "))
+            continue
 
         elif cmd == "help":
             cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
@@ -218,11 +221,11 @@ def  loop():
             break
         
         elif cmd == "points":
-            print(Player.score)
+            print(player.score)
             continue 
 
         elif cmd == "map":
-            if "map" in Player.inventory:
+            if "map" in player.inventory:
                 print('''Map
 
 
@@ -248,18 +251,18 @@ Side Entrance(3)---Lab Entrance(0)
             print("that is not a valid command")
             continue
         
-        getDestination(Player.location,direct)
+        getDestination(player.location,direct)
 
 
 
 #End Game
 def ending():
-    if Player.moveCount == 15:
+    if player.moveCount == 15:
         print("you ran out of moves")
         print()
         print("Game Over")
         print()
-    elif Player.inventory == 5:
+    elif player.inventory == 5:
         conclusion = "Congratulations " + playername + ", you found the Testing room and technology inside, to help you get home safe"
         print(conclusion)
         print() 
