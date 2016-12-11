@@ -130,8 +130,7 @@ player = Player("noname")
 
 #Start Game
 def playerCustom():
-    player.name = input("Enter the name of your player: ")
-
+    player.name = input("Enter the name of your player: ")  
 
 def titleScreen():
     title = "The Abandoned Lab:"
@@ -140,8 +139,8 @@ def titleScreen():
 def gameintro(): 
     backstory = player.name + (", you are lost in the woods and searching for any relief from civilization"
                             +" you come across what used to be a scientific laboratory researching new technologies"
-                            +" in the side of a mountain. The lab appears abandoned but could hold the key to surviving \n"
-                +" Find all items to win")
+                            +"in the side of a mountain. The lab appears abandoned but could hold the key to surviving \n"
+                            +"Find all items to win")
     player.location = 0
     player.score = 0
     player.moveCount = 0
@@ -175,11 +174,11 @@ def getDestination(startloc,direct):
 
 
 def updateGame():
-    print()
+    #print()
     print("You are at the",locations[player.location].name)
     print("score = ",player.score)
     print()
-    print('you have', 15- player.moveCount, "moves left")
+    #print('you have', 15- player.moveCount, "moves left")
     if locations[player.location].visited != True:
         print(locations[player.location].descrip)
     print()
@@ -191,40 +190,40 @@ def  loop():
         cmd = input("what would you like to do?: \n")
         cmd = cmd.lower()
 
-        if cmd == "north":
+        if cmd == "north" or "n":
             direct = 0
-        elif cmd == "south":
+        elif cmd == "south" or "s":
             direct = 1
-        elif cmd == "east":
+        elif cmd == "east" or "e":
             direct = 2
-        elif cmd == "west":
+        elif cmd == "west" or "w":
             direct = 3  
 
-        elif cmd == "examine":
+        elif cmd == "examine" or "x":
             [cmd,item] = examine(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
 
-        elif cmd == "take":
+        elif cmd == "take" or "t":
             [cmd,item] = take(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
 
-        elif cmd == "drop":
+        elif cmd == "drop" or "d":
             [cmd,item] = drop(str,input("Enter the command and what item you would like to affect").split(" "))
             continue
 
-        elif cmd == "help":
+        elif cmd == "help" or "h":
             cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
             print(cmdList)
             continue
         
-        elif cmd == "quit":
+        elif cmd == "quit" or "q":
             break
         
-        elif cmd == "points":
+        elif cmd == "points" or "p":
             print(player.score)
             continue 
 
-        elif cmd == "map":
+        elif cmd == "map" or "m":
             if "map" in player.inventory:
                 print('''Map
 
@@ -253,14 +252,12 @@ Side Entrance(3)---Lab Entrance(0)
         
         getDestination(player.location,direct)
 
-#
+from tkinter import *
+# GUI for game
 def gameGui():
-    from Tkinter import *
-    from TextGame import *
 
     #Make a window, named "root"
     root = Tk()
-
     #root attributes
     #root.geometry("550x350+500+300")
     root.title("Text Game")
@@ -295,13 +292,14 @@ def ending():
         print("Game Over")
         print()
     elif player.inventory == 5:
-        conclusion = "Congratulations " + playername + ", you found the Testing room and technology inside, to help you get home safe"
+        conclusion = "Congratulations " + player.name + ", you found the Testing room and technology inside, to help you get home safe"
         print(conclusion)
         print() 
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
     print(copyright)
 
 def main():
+    gameGui()
     playerCustom()
     titleScreen()
     gameintro()
