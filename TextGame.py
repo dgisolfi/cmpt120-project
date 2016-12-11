@@ -5,10 +5,10 @@
 #Version 0.9
 
 
-class player:
+class Player:
     
-    maxItems = 5
-
+    MAX_ITEMS = 5
+    
     def __init__(self, name):
         self.name = name    #atrributes of player
         self.location = 0
@@ -16,25 +16,25 @@ class player:
         self.inventory = []
         self.moveCount = 0
 
-    def examine(self, item):
-        if locations[player.location].item != "": #checks if the current location matches any locations in the items list:
-            print("There is a", locations[player.location].item, "in the area" )#reveal
-            print(Item.locations[player.location].descrip)
+    def examine(self):
+        if len(self.inventory) < Player.MAX_ITEMS: #checks if the current location matches any locations in the items list:
+            print("There is a", locations[self.location].item, "in the area" )#reveal
+            print(locations[self.location].descrip)
         else:
             print("there is no item in this area")#let the player know there is not a item in this area
 
     def take(self, item):
-        if len(player.inventory) < player.maxItems:
-            if item in locations[player.location].item:
-                player.inventory.append()
+        if len(self.inventory) < Player.MAX_ITEMS:
+            if item in locations[self.location].item:
+                self.inventory.append()
             else:
                 print("that item is not here")
         else:
             ending()
 
     def drop(self, item):
-        player.inventory.remove(locations[player.location].item)
-        locations[player.location].item = item
+        self.inventory.remove(locations[self.location].item)
+        locations[self.location].item = item
 
 
 class Locale:
@@ -126,7 +126,7 @@ NetworkRoom = 8
 ManufacturingRoom = 9
 
 # Give the player a placeholder, get the real name later with playerCustom
-player = player("noname")
+player = Player("noname")
 
 #Start Game
 def playerCustom():
@@ -168,7 +168,7 @@ def getDestination(startloc,direct):
     dest = gameMatrix[player.location][direct]
     print(dest)
     if dest == nowhere:
-            print("you cannot go",cmd,"from",locations[player.startloc],".")
+            print("you cannot go",cmd,"from",locations[player.location],".")
             dest = startloc
             return dest
     move(dest)
@@ -253,7 +253,39 @@ Side Entrance(3)---Lab Entrance(0)
         
         getDestination(player.location,direct)
 
+#
+def gameGui():
+    from Tkinter import *
+    from TextGame import *
 
+    #Make a window, named "root"
+    root = Tk()
+
+    #root attributes
+    #root.geometry("550x350+500+300")
+    root.title("Text Game")
+
+    #Top Frame
+    topFrame = Frame(root)
+    topFrame.pack(side = TOP)
+    #Widgets for Top Frame
+    outputText = Label(topFrame,text = backstory)
+
+    #Bottom Frame
+    bottomFrame = Frame(root)
+    bottomFrame.pack(side = BOTTOM)
+    #Widgets for Bottom Frame
+    instructLabel = Label(bottomFrame, text = "Enter a command,\n then press the button")
+    cmdInput = Entry(bottomFrame)
+    cmdButton = Button(bottomFrame, text = "Enter Command",fg = "blue")
+
+    #Pack widgets
+    instructLabel.pack(side = LEFT)
+    cmdInput.pack(side = LEFT)
+    cmdButton.pack(side = RIGHT)
+    outputText.pack(side = LEFT)
+
+    root.mainloop()
 
 #End Game
 def ending():
