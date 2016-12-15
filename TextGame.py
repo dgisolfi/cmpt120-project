@@ -129,28 +129,34 @@ ManufacturingRoom = 9
 player = Player("noname")
 
 #Start Game
-def playerCustom():
-    player.name = input("Enter the name of your player: ")  
-
 def titleScreen():
     title = "The Abandoned Lab:"
-    print(title)
+    outText = title
+    
 
-def gameintro(): 
-    backstory = player.name + (", you are lost in the woods and searching for any relief from civilization"
-                            +" you come across what used to be a scientific laboratory researching new technologies"
-                            +"in the side of a mountain. The lab appears abandoned but could hold the key to surviving \n"
+def playerCustom():
+    player.name = input("Enter the name of your player: ")  
+    
+
+
+
+def gameintro():
+    global backstory
+    backstory = player.name + (", you are lost in the woods and searching for any relief from civilization\n"
+                            +" you come across what used to be a scientific laboratory researching new technologies\n"
+                            +"in the side of a mountain. The lab appears abandoned but could hold the key to surviving\n"
                             +"Find all items to win")
     player.location = 0
     player.score = 0
     player.moveCount = 0
     player.inventory = ""
-    print()
+    print() 
     print(backstory)
     print()
     print("You are at the",locations[player.location].name)
     print(locations[player.location].descrip)
     print()
+    
 
 
 def move(dest):
@@ -186,7 +192,8 @@ def updateGame():
     
 def  loop():
     while True:
-        global cmd
+        global cmd, prompt
+        
         cmd = input("what would you like to do?: \n")
         cmd = cmd.lower()
 
@@ -253,34 +260,56 @@ Side Entrance(3)---Lab Entrance(0)
         getDestination(player.location,direct)
 
 from tkinter import *
+from sys import *
 # GUI for game
 def gameGui():
+    global outText
+
+    outText = "Press 'start' to begin your Adventure"
 
     #Make a window, named "root"
     root = Tk()
     #root attributes
     #root.geometry("550x350+500+300")
     root.title("Text Game")
+    root.background("black")
 
     #Top Frame
     topFrame = Frame(root)
     topFrame.pack(side = TOP)
+    def press():
+        outText = cmdInput.get()
+        #outputText = Label(bottomFrame, text = outText).pack()
+        outputText.insert(END, outText)
     #Widgets for Top Frame
-    outputText = Label(topFrame,text = backstory)
+        #listbox
+    scrollbar = Scrollbar(topFrame)
+    outputText = Listbox(topFrame, yscrollcommand=scrollbar.set)
+    scrollbar.config(command=outputText.yview)
+        #Other widgets
+    instructLabel = Label(topFrame, text = "Enter a Command:")
+    cmdInput = Entry(topFrame)
+    cmdButton = Button(topFrame, text = "Enter",fg = "blue", command = press)
+    quitButton = Button(topFrame, text = "Quit", command = root.quit)
+    startButton = Button(topFrame, text = "Start", command = titleScreen)
+    
+    #outputText = Label(bottomFrame, text = outText)
 
-    #Bottom Frame
-    bottomFrame = Frame(root)
-    bottomFrame.pack(side = BOTTOM)
-    #Widgets for Bottom Frame
-    instructLabel = Label(bottomFrame, text = "Enter a command,\n then press the button")
-    cmdInput = Entry(bottomFrame)
-    cmdButton = Button(bottomFrame, text = "Enter Command",fg = "blue")
+
+   
 
     #Pack widgets
-    instructLabel.pack(side = LEFT)
-    cmdInput.pack(side = LEFT)
-    cmdButton.pack(side = RIGHT)
-    outputText.pack(side = LEFT)
+    scrollbar.pack(side=LEFT, fill=Y)
+    outputText.pack(side=LEFT, fill=BOTH)
+    instructLabel.pack(side = TOP)
+    cmdInput.pack(side = TOP)
+    quitButton.pack(side = RIGHT)
+    cmdButton.pack(side = LEFT)
+    startButton.pack(side = BOTTOM)
+    outputText.insert(END, outText)
+    #outputText.pack()
+
+    
 
     root.mainloop()
 
@@ -297,11 +326,7 @@ def ending():
         print() 
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
     print(copyright)
-
-def main():
-    gameGui()
-    playerCustom()
-    titleScreen()
-    gameintro()
-    loop()
-main()
+    #exit()
+    
+gameGui()
+    
