@@ -2,8 +2,10 @@
 #Author: Daniel Gisolfi
 #Date: 11/21/16
 #TextGame.py
-#Version 0.9
+#Version 1.0
 
+#from TextGameGui import *
+#from TextGameClass import *
 
 class Player:
     
@@ -18,17 +20,17 @@ class Player:
 
     def examine(self):
         if len(self.inventory) < Player.MAX_ITEMS: #checks if the current location matches any locations in the items list:
-            print("There is a", locations[self.location].item, "in the area" )#reveal
-            print(locations[self.location].descrip)
+            outputText.insert(END,"There is a", locations[self.location].item, "in the area" )#reveal
+            outputText.insert(END,locations[self.location].descrip)
         else:
-            print("there is no item in this area")#let the player know there is not a item in this area
+            outputText.insert(END,"there is no item in this area")#let the player know there is not a item in this area
 
     def take(self, item):
         if len(self.inventory) < Player.MAX_ITEMS:
             if item in locations[self.location].item:
                 self.inventory.append()
             else:
-                print("that item is not here")
+                outputText.insert(END,"that item is not here")
         else:
             ending()
 
@@ -74,9 +76,11 @@ locations = [
 
     Locale("Network Room","A small compact room filled with ethernet cables connected to various machines.",False, ""),
 
-    Locale("Manufacturing Lab","An old manufacturing room where assembly lines are set up with products in various stages of completion",
-        False, "Battery")
-    ]
+    Locale("Manufacturing Lab","An old manufacturing room where assembly lines are set up with products in various stages of completion",False, "Battery"),
+    
+    Locale("A.I. Facility", "A room filled with computers and hard drives for the purpose of creating a AI", False, ""),
+
+    Locale("Break Room", "room devoted to eating and taking breaks from the high level of stress at work", False, "Crowbar")]
 
 class Item:
 
@@ -89,8 +93,8 @@ items = [
     Item("keycard","a Id card that grants accss to rooms"),
     Item("FlashLight","a old fashlight that still needs a battery"),
     Item("Power shoes","shoes that allow the user to move quicker"),
-    Item("Battery","a battery that still holds a charge and can power a flashlight")]
-
+    Item("Battery","a battery that still holds a charge and can power a flashlight"),
+    Item("Crowbar", "A ong peice of metal used to pry")]
 
 
 #Game Matrix
@@ -105,7 +109,9 @@ gameMatrix =[
 [7,5,-1,4],
 [-1,6,-1,-1],
 [-1,2,4,-1],
-[-1,4,7,-1]]
+[-1,4,7,-1],
+[-1,-1,-1,7],
+[-1,-1,-1,5]]
 
 
 
@@ -124,16 +130,17 @@ dataCenter = 6
 testingRoom = 7
 NetworkRoom = 8
 ManufacturingRoom = 9
+aiFacility = 10
+breakRoom = 11
 
 # Give the player a placeholder, get the real name later with playerCustom
 player = Player("noname")
-
 
 from tkinter import *
 from sys import *
 # GUI for game
 def gameGui():
-    global outText, outputText, Frame, cmdInput, cmdButton
+    global outText, outputText, Frame, cmdInput, cmdButton, root
 
     #Make a window, named "root"
     root = Tk()
@@ -142,11 +149,11 @@ def gameGui():
     root.title("Text Game")
     #root.option_add("*background", "black")
 
-    #Top Frame
+    #Frame
     Frame = Frame(root)
     Frame.pack(side = TOP)
         #outputText = Label(bottomFrame, text = outText).pack()
-    #Widgets for Top Frame
+    #Widgets for Frame
         #listbox
     scrollbar = Scrollbar(Frame)
     outputText = Listbox(Frame, yscrollcommand=scrollbar.set, width = 40)
@@ -155,7 +162,7 @@ def gameGui():
     instructLabel = Label(Frame, text = "Enter a Command:")
     cmdInput = Entry(Frame)
     cmdButton = Button(Frame, text = "Enter",fg = "blue", command = playerCustom)
-    quitButton = Button(Frame, text = "Quit", command = root.quit)
+    quitButton = Button(Frame, text = "Quit", command = ending)
     startButton = Button(Frame, text = "Start", command = titleScreen)
     
     #outputText = Label(bottomFrame, text = outText)
@@ -171,20 +178,23 @@ def gameGui():
     startButton.pack(side = LEFT)
     outputText.insert(END, "Press Start")
     #outputText.pack()
-
-    
-
     root.mainloop()
+
+    #Into to programing
+#Author: Daniel Gisolfi
+#Date: 12/14/16
+#TextGameClass.py
+#Version 1.0
+
 #Start Game
-
-
-
 def press():
     global cmd
     cmd = cmdInput.get()
     outputText.insert(END,cmd)
     cmd = cmd.lower()
     loop()
+    outputText.insert(END,"")
+    outputText.insert(END,"Enter a Command:")
 
 
 def titleScreen():
@@ -213,7 +223,7 @@ def gameintro():
     outputText.insert(END,("You are at the "+locations[player.location].name))
     outputText.insert(END,(locations[player.location].descrip))
     outputText.insert(END,"")
-    loop()
+    outputText.insert(END,"Enter a Command:")
     
 
 
@@ -230,104 +240,107 @@ def move(dest):
 def getDestination(startloc,direct):
     dest = gameMatrix[player.location][direct]
     if dest == nowhere:
-            outputText.insert(END,("you cannot go",cmd,"from",locations[player.location],"."))
+            outputText.insert(END,("you cannot go "+cmd+" from"+locations[player.location]+"."))
             dest = startloc
             return dest
     move(dest)
 
 
 def updateGame():
-    #print()
-    outputText.insert(END,("You are at the",locations[player.location].name))
-    outputText.insert(END,("score = ",player.score))
-    outputText.insert(END,"")
-    #print('you have', 15- player.moveCount, "moves left")
+    #outputText.insert(END,"")
+    outputText.insert(END,("You are at the "+locations[player.location].name))
+    outputText.insert(END,("score = ",str(player.score)))
+    #outputText.insert(END,'you have', 15- player.moveCount, "moves left")
     if locations[player.location].visited != True:
         outputText.insert(END,(locations[player.location].descrip))
-    outputText.insert(END,())
     
     
 def  loop():
-    while True:
-        outputText.insert(END,"Enter a Command:")
+    global cmd
+    
+    if cmd == "north" or "n":
+        direct = 0
+    elif cmd == "south" or "s":
+        direct = 1
+    elif cmd == "east" or "e":
+        direct = 2
+    elif cmd == "west" or "w":
+        direct = 3  
+
+    elif cmd == "examine" or "x":
+        [cmd,item] = examine(str,input("Enter the command and what item you would like to affect").split(" "))
         
-        if cmd == "north" or "n":
-            direct = 0
-        elif cmd == "south" or "s":
-            direct = 1
-        elif cmd == "east" or "e":
-            direct = 2
-        elif cmd == "west" or "w":
-            direct = 3  
 
-        elif cmd == "examine" or "x":
-            [cmd,item] = examine(str,input("Enter the command and what item you would like to affect").split(" "))
-            continue
-
-        elif cmd == "take" or "t":
-            [cmd,item] = take(str,input("Enter the command and what item you would like to affect").split(" "))
-            continue
-
-        elif cmd == "drop" or "d":
-            [cmd,item] = drop(str,input("Enter the command and what item you would like to affect").split(" "))
-            continue
-
-        elif cmd == "help" or "h":
-            cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
-            print(cmdList)
-            continue
+    elif cmd == "take" or "t":
+        [cmd,item] = take(str,input("Enter the command and what item you would like to affect").split(" "))
         
-        elif cmd == "quit" or "q":
-            break
+
+    elif cmd == "drop" or "d":
+        [cmd,item] = drop(str,input("Enter the command and what item you would like to affect").split(" "))
         
-        elif cmd == "points" or "p":
-            print(player.score)
-            continue 
 
-        elif cmd == "map" or "m":
-            if "map" in player.inventory:
-                print('''Map
+    elif cmd == "help" or "h":
+        cmdList = ["North", "South", "East", "West", "Help", "Quit", "Map", "Points"]
+        outputText.insert(END,cmdList)
+        
+    
+    elif cmd == "points" or "p":
+        outputText.insert(END,player.score)
+
+    elif cmd == "inventory" or "i":
+        outputText.insert(END, player.inventory)
+         
+
+    elif cmd == "map" or "m":
+        if "map" in player.inventory:
+            outputText.insert(END,'''Map
 
 
-            Manufacturing Lab(9) Testing Room(7)
-                     |              |
-                     |              |
+        Manufacturing Lab(9) Testing Room(7)-------aiFacility(10)
+                 |              |
+                 |              |
 Network Room(8)--Storage Room(4)--Datacenter(6)
-      |              |              |
-      |              |              |
-      |              |              |
-Powercenter(2)-----Servicedesk(1)---Computer lab(5)
-      |              |   
-      |              |
-      |              |
+  |              |              |
+  |              |              |
+  |              |              |
+Powercenter(2)-----Servicedesk(1)---Computer lab(5)--breakRoom(11)
+  |              |   
+  |              |
+  |              |
 Side Entrance(3)---Lab Entrance(0)
 
 ''')
-            else:
-                print("you have not found the map yet")
-            continue
-
         else:
-            print("that is not a valid command")
-            continue
-        
-        getDestination(player.location,direct)
+            outputText.insert(END,"you have not found the map yet")
+
+    else:
+        outputText.insert(END,"that is not a valid command")      
+    
+    getDestination(player.location,direct)
 
 #End Game
 def ending():
     if player.moveCount == 15:
-        print("you ran out of moves")
-        print()
-        print("Game Over")
-        print()
+        outputText.insert(END,"you ran out of moves")
+        outputText.insert(END,"")
+        outputText.insert(END,"Game Over")
+        outputText.insert(END,"")
     elif player.inventory == 5:
         conclusion = "Congratulations " + player.name + ", you found the Testing room and technology inside, to help you get home safe"
-        print(conclusion)
-        print() 
+        outputText.insert(END,conclusion)
+        outputText.insert(END,"") 
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
-    print(copyright)
-    #exit()
-
+    outputText.insert(END,copyright)
+    while True:
+        outputText.insert(END,"do you want to play again? Y or N")
+        txt = cmdInput.get()
+        outputText.insert(END,cmd)
+        txt = txt.lower()
+        if "Y" in txt:
+            continue
+        else:
+            root.quit
 
 gameGui()
-    
+
+
