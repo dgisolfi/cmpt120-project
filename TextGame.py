@@ -128,16 +128,73 @@ ManufacturingRoom = 9
 # Give the player a placeholder, get the real name later with playerCustom
 player = Player("noname")
 
+
+from tkinter import *
+from sys import *
+# GUI for game
+def gameGui():
+    global outText, outputText, Frame, cmdInput, cmdButton
+
+    #Make a window, named "root"
+    root = Tk()
+    #root attributes
+    #root.geometry("550x350+500+300")
+    root.title("Text Game")
+    #root.option_add("*background", "black")
+
+    #Top Frame
+    Frame = Frame(root)
+    Frame.pack(side = TOP)
+        #outputText = Label(bottomFrame, text = outText).pack()
+    #Widgets for Top Frame
+        #listbox
+    scrollbar = Scrollbar(Frame)
+    outputText = Listbox(Frame, yscrollcommand=scrollbar.set, width = 40)
+    scrollbar.config(command=outputText.yview)
+        #Other widgets
+    instructLabel = Label(Frame, text = "Enter a Command:")
+    cmdInput = Entry(Frame)
+    cmdButton = Button(Frame, text = "Enter",fg = "blue", command = playerCustom)
+    quitButton = Button(Frame, text = "Quit", command = root.quit)
+    startButton = Button(Frame, text = "Start", command = titleScreen)
+    
+    #outputText = Label(bottomFrame, text = outText)
+    
+
+    #Pack widgets
+    scrollbar.pack(side=LEFT, fill=Y)
+    outputText.pack(side=LEFT, fill=BOTH)
+    instructLabel.pack(side = TOP)
+    cmdInput.pack(side = TOP)
+    quitButton.pack(side = RIGHT)
+    cmdButton.pack(side = LEFT)
+    startButton.pack(side = LEFT)
+    outputText.insert(END, "Press Start")
+    #outputText.pack()
+
+    
+
+    root.mainloop()
 #Start Game
+
+
+
+def press():
+    global cmd
+    cmd = cmdInput.get()
+    outputText.insert(END,cmd)
+    cmd = cmd.lower()
+    loop()
+
+
 def titleScreen():
-    title = "The Abandoned Lab:"
-    outText = title
-    
+    outputText.insert(END, "The Abandoned Lab:")
+    outputText.insert(END, "Enter the name of your player and press enter: ")
 
-def playerCustom():
-    player.name = input("Enter the name of your player: ")  
-    
-
+def playerCustom():     
+    player.name = cmdInput.get()
+    cmdButton.config(command = press)
+    gameintro()
 
 
 def gameintro():
@@ -150,12 +207,13 @@ def gameintro():
     player.score = 0
     player.moveCount = 0
     player.inventory = ""
-    print() 
-    print(backstory)
-    print()
-    print("You are at the",locations[player.location].name)
-    print(locations[player.location].descrip)
-    print()
+    outputText.insert(END,"")
+    outputText.insert(END,backstory)
+    outputText.insert(END,"")
+    outputText.insert(END,("You are at the "+locations[player.location].name))
+    outputText.insert(END,(locations[player.location].descrip))
+    outputText.insert(END,"")
+    loop()
     
 
 
@@ -171,9 +229,8 @@ def move(dest):
 
 def getDestination(startloc,direct):
     dest = gameMatrix[player.location][direct]
-    print(dest)
     if dest == nowhere:
-            print("you cannot go",cmd,"from",locations[player.location],".")
+            outputText.insert(END,("you cannot go",cmd,"from",locations[player.location],"."))
             dest = startloc
             return dest
     move(dest)
@@ -181,22 +238,19 @@ def getDestination(startloc,direct):
 
 def updateGame():
     #print()
-    print("You are at the",locations[player.location].name)
-    print("score = ",player.score)
-    print()
+    outputText.insert(END,("You are at the",locations[player.location].name))
+    outputText.insert(END,("score = ",player.score))
+    outputText.insert(END,"")
     #print('you have', 15- player.moveCount, "moves left")
     if locations[player.location].visited != True:
-        print(locations[player.location].descrip)
-    print()
+        outputText.insert(END,(locations[player.location].descrip))
+    outputText.insert(END,())
     
     
 def  loop():
     while True:
-        global cmd, prompt
+        outputText.insert(END,"Enter a Command:")
         
-        cmd = input("what would you like to do?: \n")
-        cmd = cmd.lower()
-
         if cmd == "north" or "n":
             direct = 0
         elif cmd == "south" or "s":
@@ -259,60 +313,6 @@ Side Entrance(3)---Lab Entrance(0)
         
         getDestination(player.location,direct)
 
-from tkinter import *
-from sys import *
-# GUI for game
-def gameGui():
-    global outText
-
-    outText = "Press 'start' to begin your Adventure"
-
-    #Make a window, named "root"
-    root = Tk()
-    #root attributes
-    #root.geometry("550x350+500+300")
-    root.title("Text Game")
-    root.background("black")
-
-    #Top Frame
-    topFrame = Frame(root)
-    topFrame.pack(side = TOP)
-    def press():
-        outText = cmdInput.get()
-        #outputText = Label(bottomFrame, text = outText).pack()
-        outputText.insert(END, outText)
-    #Widgets for Top Frame
-        #listbox
-    scrollbar = Scrollbar(topFrame)
-    outputText = Listbox(topFrame, yscrollcommand=scrollbar.set)
-    scrollbar.config(command=outputText.yview)
-        #Other widgets
-    instructLabel = Label(topFrame, text = "Enter a Command:")
-    cmdInput = Entry(topFrame)
-    cmdButton = Button(topFrame, text = "Enter",fg = "blue", command = press)
-    quitButton = Button(topFrame, text = "Quit", command = root.quit)
-    startButton = Button(topFrame, text = "Start", command = titleScreen)
-    
-    #outputText = Label(bottomFrame, text = outText)
-
-
-   
-
-    #Pack widgets
-    scrollbar.pack(side=LEFT, fill=Y)
-    outputText.pack(side=LEFT, fill=BOTH)
-    instructLabel.pack(side = TOP)
-    cmdInput.pack(side = TOP)
-    quitButton.pack(side = RIGHT)
-    cmdButton.pack(side = LEFT)
-    startButton.pack(side = BOTTOM)
-    outputText.insert(END, outText)
-    #outputText.pack()
-
-    
-
-    root.mainloop()
-
 #End Game
 def ending():
     if player.moveCount == 15:
@@ -327,6 +327,7 @@ def ending():
     copyright = "Copyright (c) 2016 Daniel Gisolfi, Daniel.Gisolfi1@marist.edu"
     print(copyright)
     #exit()
-    
+
+
 gameGui()
     
